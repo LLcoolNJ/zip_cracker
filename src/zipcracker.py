@@ -8,11 +8,11 @@ maxRep = 5
 """It generates the passwords."""
 def genPassword(zfile):
     back = '.' + zfile +'.data'
-    for x in xrange(minRep, maxRep + 1):
-        f = open(back,'w')
+    for x in range(minRep, maxRep + 1):
+        f = open(back,mode='w')
         f.write(str(x))
         f.close()
-        print 'Trying passwords of length %d' %x
+        print('Trying passwords of length %d' %x)
         for l in itertools.product(charset,repeat = x):
             yield ''.join(l)
 
@@ -31,11 +31,12 @@ def extract(zfile,password):
 
 """Function for bruteforce attack."""
 def bruteforce(zfile):
-    back = '.' + zfile +'.data'
+    back = zfile
     password = ''
     try:
-        f = open(back,'r')
+        f = open(back,'rb')
         data = f.readline().strip()
+        print(data)
         if 'pwd' == data[:3]:
             password = data[4:]
             return password
@@ -65,7 +66,7 @@ def bruteforce(zfile):
             except KeyboardInterrupt:
                 exit(0)
     if not flag:
-        print 'Password Not Found!!!'
+        print('Password Not Found!!!')
         exit(0)
     f = open(back,'w')
     f.write('pwd:' + password)
@@ -100,7 +101,7 @@ def dictionary(zfile, dic):
         flag = False
     if not flag:
         dlist = dictionaryFile.readlines()
-        for i in xrange(start,len(dlist)):
+        for i in range(start,len(dlist)):
             try:
                 flag = extract(zfile, dlist[i])
                 if flag:
@@ -109,7 +110,7 @@ def dictionary(zfile, dic):
             except KeyboardInterrupt:
                 exit(0)
     if not flag:
-        print 'Password Not Found!!!'
+        print('Password Not Found!!!')
         exit(0)
     f = open(back,'w')
     f.write('pwd:' + password)
@@ -119,23 +120,23 @@ def dictionary(zfile, dic):
 
 if __name__ == '__main__':
     arg = sys.argv[1:]
-    if arg[0] == '-h' or arg[0] == '--h' or arg[0] == '-help':
-        print "usage script.py filename [-b | -ab charset=charset | -m=[2,5] | -d file=dictionary.txt]"
-        print "option:"
-        print "-b\t\t\t:Bruteforce attack."
-        print "-ab -file=charset\t:Advance Bruteforce attack from the given charset."
-        print "-d file=dict.txt\t:Dictionary attack. Provide dictionary name in present working directory"
-        print "-m=[min, max]\t\t:Minimum and Maximum length of passwords to be consider."
+    if(len(arg) == 0 or arg[0] == '-h' or arg[0] == '--h' or arg[0] == '-help'):
+        print("usage script.py filename [-b | -ab charset=charset | -m=[2,5] | -d file=dictionary.txt]")
+        print("option:")
+        print("-b\t\t\t:Bruteforce attack.")
+        print("-ab -file=charset\t:Advance Bruteforce attack from the given charset.")
+        print("-d file=dict.txt\t:Dictionary attack. Provide dictionary name in present working directory")
+        print("-m=[min, max]\t\t:Minimum and Maximum length of passwords to be consider.")
         exit(0)
     elif arg[1] == '-b':
-        print 'Processing...'
+        print('Processing...')
         if len(arg) > 2:
             length = arg[2].split('=')[1].split(',')
             minRep = int(length[0][1:])
             maxRep = int(length[1][:-1])
         password = bruteforce(arg[0])
     elif arg[1] == '-ab':
-        print 'Processing...'
+        print('Processing...')
         if len(arg) > 3:
             length = arg[3].split('=')[1].split(',')
             minRep = int(length[0][1:])
@@ -143,25 +144,25 @@ if __name__ == '__main__':
         try:
             charset = arg[2].split('=')[1]
         except:
-            print "usage script.py filename [-b | -ab charset=charset | -m=[2,5] | -d file=dictionary.txt]"
-            print "option:"
-            print "-b\t\t\t:Bruteforce attack."
-            print "-ab -file=charset\t:Advance Bruteforce attack from the given charset."
-            print "-d file=dict.txt\t:Dictionary attack. Provide dictionary name in present working directory"
-            print "-m=[min, max]\t\t:Minimum and Maximum length of passwords to be consider."
+            print("usage script.py filename [-b | -ab charset=charset | -m=[2,5] | -d file=dictionary.txt]")
+            print("option:")
+            print("-b\t\t\t:Bruteforce attack.")
+            print("-ab -file=charset\t:Advance Bruteforce attack from the given charset.")
+            print("-d file=dict.txt\t:Dictionary attack. Provide dictionary name in present working directory")
+            print("-m=[min, max]\t\t:Minimum and Maximum length of passwords to be consider.")
             exit(0)
         password = bruteforce(arg[0])
     elif arg[1] == '-d':
-        print 'Processing...'
+        print('Processing...')
         fl = arg[2].split('=')[1]
         password = dictionary(arg[0],fl)
     else:
-        print "Invalid input"
-        print "usage script.py filename [-b | -ab charset=charset | -m=[2,5] | -d file=dictionary.txt]"
-        print "option:"
-        print "-b\t\t\t:Bruteforce attack."
-        print "-ab -file=charset\t:Advance Bruteforce attack from the given charset."
-        print "-d file=dict.txt\t:Dictionary attack. Provide dictionary name in present working directory"
-        print "-m=[min, max]\t\t:Minimum and Maximum length of passwords to be consider."
+        print("Invalid input")
+        print("usage script.py filename [-b | -ab charset=charset | -m=[2,5] | -d file=dictionary.txt]")
+        print("option:")
+        print ("-b\t\t\t:Bruteforce attack.")
+        print ("-ab -file=charset\t:Advance Bruteforce attack from the given charset.")
+        print ("-d file=dict.txt\t:Dictionary attack. Provide dictionary name in present working directory")
+        print ("-m=[min, max]\t\t:Minimum and Maximum length of passwords to be consider.")
         exit(0)
-    print 'Password is "%s" without quotes.' %password
+    print('Password is "%s" without quotes.' %password)
